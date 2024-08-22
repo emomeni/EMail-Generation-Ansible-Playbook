@@ -1,0 +1,24 @@
+---
+- name: Automate email generation and sending
+  hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: Send an email notification
+      mail:
+        host: smtp.example.com           # Replace with your SMTP server
+        port: 587                        # Replace with your SMTP port (typically 25, 465, or 587)
+        username: your_email@example.com # Replace with your SMTP username
+        password: your_password          # Replace with your SMTP password
+        to: recipient@example.com        # Replace with recipient's email
+        from: your_email@example.com     # Replace with sender's email
+        subject: "Automated Email from Ansible"
+        body: |
+          Hello,
+
+          This is an automated email sent by an Ansible playbook.
+
+          Regards,
+          Ansible Automation
+        secure: starttls                 # Use 'starttls' for secure connection or 'ssl' for SSL/TLS
+        charset: utf-8                   # Ensure proper encoding
