@@ -18,7 +18,7 @@ Before running the playbook, ensure you have the following prerequisites in plac
 
 ## Playbook Configuration
 
-The provided playbook, `send_email.yml`, is pre-configured with placeholder values. Before running the playbook, you need to customize these placeholders with your specific details.
+The provided playbook, `sendemail.yaml`, is pre-configured with placeholder values. Before running the playbook, you need to customize these placeholders with your specific details.
 
 ### Variables to Customize:
 
@@ -51,4 +51,14 @@ mail:
     Ansible Automation
   secure: starttls                 # Use 'starttls' for secure connection or 'ssl' for SSL/TLS
   charset: utf-8                   # Ensure proper encoding
+```
 
+## Running the Playbook
+Once you've customized the playbook with your details, you can run it to send the email. Follow these steps:
+
+1. Save the playbook as sendemail.yaml in your working directory.
+
+2. Run the playbook using the following command:
+```bash
+ansible-playbook sendemail.yaml
+```
