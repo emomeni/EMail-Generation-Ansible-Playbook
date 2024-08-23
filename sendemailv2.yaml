@@ -1,0 +1,54 @@
+---
+- name: Automate email generation based on non-consistencies in Excel
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    excel_file: /path/to/your/spreadsheet.xlsx  # Replace with the path to your Excel file
+    sheet_name: Sheet1                          # Replace with your sheet name
+    email_column: Email                         # Replace with the name of the email column
+    check_column_1: ColumnA                     # Replace with the name of the first column to check
+    check_column_2: ColumnB                     # Replace with the name of the second column to check
+
+  tasks:
+    - name: Read Excel file
+      community.general.read_excel:
+        path: "{{ excel_file }}"
+        sheet_name: "{{ sheet_name }}"
+      register: excel_data
+
+    - name: Identify non-consistencies
+      set_fact:
+        non_consistent_emails: >-
+          {%- set emails = [] -%}
+          {%- for row in excel_data.sheet -%}
+            {%- if row[check_column_1] != row[check_column_2] and row[email_column] is defined -%}
+              {{ emails.append(row[email_column]) }}
+            {%- endif -%}
+          {%- endfor -%}
+          {{ emails }}
+
+    - name: Ensure list of non-consistent emails is unique
+      set_fact:
+        unique_emails: "{{ non_consistent_emails | unique }}"
+
+    - name: Send email notification to non-consistent emails
+      mail:
+        host: smtp.example.com           # Replace with your SMTP server
+        port: 587                        # Replace with your SMTP port
+        username: your_email@example.com # Replace with your SMTP username
+        password: your_password          # Replace with your SMTP password
+        to: "{{ unique_emails | join(',') }}"  # Send to the list of unique emails
+        from: your_email@example.com     # Replace with sender's email
+        subject: "Non-Consistencies Found in Your Data"
+        body: |
+          Hello,
+
+          We have identified non-consistencies in your data based on the latest analysis.
+
+          Please review the attached spreadsheet for details.
+
+          Regards,
+          Ansible Automation
+        secure: starttls                 # Use 'starttls' for secure connection or 'ssl' for SSL/TLS
+        charset: utf-8                   # Ensure proper encoding
