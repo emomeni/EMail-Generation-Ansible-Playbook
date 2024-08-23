@@ -66,38 +66,38 @@ ansible-playbook sendemail.yaml
 ## Updated Playbook Overview (sendemailv2.yaml)
 This updated Ansible playbook will:
 
-1. Read an Excel Spreadsheet: Using the community.general.read_excel Ansible module (which requires the community.general collection), the playbook will read data from an Excel spreadsheet.
+1. Read an Excel Spreadsheet: Using the `community.general.read_excel` Ansible module (which requires the `community.general` collection), the playbook will read data from an Excel spreadsheet.
 2. Identify Non-Consistencies: Compare values across certain columns to identify non-consistencies.
 3. Generate a List of Emails: Extract a list of email addresses from the spreadsheet associated with the identified non-consistencies.
-4. Send Emails: Use the mail module to send a notification email to the extracted list of email addresses.
+4. Send Emails: Use the `mail` module to send a notification email to the extracted list of email addresses.
 
 ### Prerequisites for updated playbook (sendemailv2.yaml)
-1. Ansible Collection: The community.general collection must be installed to use the read_excel module.
+1. Ansible Collection: The `community.general` collection must be installed to use the `read_excel` module.
 install it with:
 ```bash
 ansible-galaxy collection install community.general
 ```
-3. Python Dependencies: The control node will require Python libraries like openpyxl to handle Excel files.
+3. Python Dependencies: The control node will require Python libraries like `openpyxl` to handle Excel files.
 install them with:
 ```bash
 pip install openpyxl
 ```
 ### Explanation of the Updates
 1. Reading the Excel File:
-The community.general.read_excel module reads the specified Excel file and registers the data into excel_data.
-The sheet_name variable specifies which sheet to read from.
+The `community.general.read_excel` module reads the specified Excel file and registers the data into `excel_data`.
+The `sheet_name` variable specifies which sheet to read from.
 
 2. Identifying Non-Consistencies:
-We use a set_fact task to iterate through the rows of the Excel sheet. For each row, the playbook checks if the values in check_column_1 and check_column_2 are different.
-If they differ, the email address from email_column is added to a list.
+We use a `set_fact` task to iterate through the rows of the Excel sheet. For each row, the playbook checks if the values in `check_column_1` and `check_column_2` are different.
+If they differ, the email address from `email_column` is added to a list.
 
 3. Ensuring Unique Emails:
 The playbook uses a filter to remove duplicate email addresses, ensuring each recipient only receives one email.
 
 4. Sending Emails:
-The mail module is configured to send emails to the list of unique email addresses extracted from the Excel file. The to field joins the list of emails into a single string, separating each email with a comma.
+The `mail` module is configured to send emails to the list of unique email addresses extracted from the Excel file. The to field joins the list of emails into a single string, separating each email with a comma.
 
 ### Customization
-1. Columns to Check: Adjust the check_column_1 and check_column_2 variables to specify which columns you want to compare for inconsistencies.
-2. Email Content: Customize the subject and body of the email to fit your needs.
+1. Columns to Check: Adjust the `check_column_1` and `check_column_2` variables to specify which columns you want to compare for inconsistencies.
+2. Email Content: Customize the `subject` and `body` of the email to fit your needs.
 3. SMTP Configuration: Ensure your SMTP server settings are correctly configured.
